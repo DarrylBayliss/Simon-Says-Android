@@ -12,7 +12,7 @@ class MediapipeRepository @Inject constructor(private val mediapipeLLMDataSource
         )
     }
 
-    fun sendMessage(message: Message) {
-        mediapipeLLMDataSource.sendMessage(message = message.text)
+    fun sendMessage(message: Message): String {
+        return mediapipeLLMDataSource.sendMessage(message = message.text)
     }
 }

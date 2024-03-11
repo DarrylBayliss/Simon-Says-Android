@@ -8,7 +8,10 @@ import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @HiltViewModel
-class PlayViewModel @Inject constructor(private val startSimonSays: StartSimonSays) : ViewModel() {
+class PlayViewModel @Inject constructor(
+    private val startSimonSays: StartSimonSays,
+    private val sendMessageToSimon: SendMessageToSimon
+) : ViewModel() {
     val messages: StateFlow<List<Message>>
         get() = _messages
 
@@ -19,7 +22,28 @@ class PlayViewModel @Inject constructor(private val startSimonSays: StartSimonSa
     fun startGame() {
         val message = startSimonSays()
         val list = _messages.value.toMutableList()
-        list.add(message)
+        list += message
+
+        _messages.update {
+            list
+        }
+    }
+
+    fun sendMessage(text: String) {
+        val newMessage = Message(
+            text = text,
+            isFromMe = true
+        )
+
+        val list = _messages.value.toMutableList()
+        list += newMessage
+
+        _messages.update {
+            list
+        }
+
+        val messageFromSimon = sendMessageToSimon(message = newMessage)
+        list += messageFromSimon
 
         _messages.update {
             list

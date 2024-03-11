@@ -1,7 +1,6 @@
 package com.darrylbayliss.simonsays.presentation
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,6 +15,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -73,7 +73,7 @@ fun PlayScreen(viewModel: PlayViewModel) {
                     width = Dimension.fillToConstraints
                 },
             onSendMessageClicked = { message ->
-
+                viewModel.sendMessage(message)
             },
             onTakePhotoClicked = {
 
@@ -81,9 +81,9 @@ fun PlayScreen(viewModel: PlayViewModel) {
         )
     }
 
-//    LaunchedEffect(key1 = StartGameKey) {
-//        viewModel.startGame()
-//    }
+    LaunchedEffect(key1 = StartGameKey) {
+        viewModel.startGame()
+    }
 }
 
 @Composable
@@ -134,7 +134,10 @@ fun ChatBox(
                 Text(text = "Type something")
             }
         )
-        IconButton(onClick = { onSendMessageClicked(chatBoxValue.text) }) {
+        IconButton(onClick = {
+            onSendMessageClicked(chatBoxValue.text)
+            chatBoxValue = TextFieldValue("")
+        }) {
             Icon(painter = painterResource(id = R.drawable.send), contentDescription = null)
         }
         IconButton(onClick = { onTakePhotoClicked() }) {
