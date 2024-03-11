@@ -121,8 +121,11 @@ fun ChatBox(
 
     var chatBoxValue by remember { mutableStateOf(TextFieldValue("")) }
 
-    Row(modifier = modifier, horizontalArrangement = Arrangement.Absolute.SpaceEvenly) {
+    Row(
+        modifier = modifier,
+    ) {
         TextField(
+            modifier = Modifier.weight(1f),
             value = chatBoxValue,
             onValueChange = { newText ->
                 chatBoxValue = newText
@@ -135,7 +138,10 @@ fun ChatBox(
             Icon(painter = painterResource(id = R.drawable.send), contentDescription = null)
         }
         IconButton(onClick = { onTakePhotoClicked() }) {
-            Icon(painter = painterResource(id = R.drawable.photo_camera), contentDescription = null)
+            Icon(
+                painter = painterResource(id = R.drawable.photo_camera),
+                contentDescription = null
+            )
         }
     }
 }
