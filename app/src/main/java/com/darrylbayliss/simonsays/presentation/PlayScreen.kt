@@ -1,5 +1,8 @@
 package com.darrylbayliss.simonsays.presentation
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,6 +27,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
@@ -36,12 +40,26 @@ import com.darrylbayliss.simonsays.domain.Message
 import com.darrylbayliss.simonsays.domain.PlayViewModel
 import com.darrylbayliss.simonsays.ui.theme.PurpleGrey80
 import com.darrylbayliss.simonsays.ui.theme.SimonSaysTheme
-
+import com.darrylbayliss.simonsays.utils.SimonsSaysFileProvider
 
 private const val StartGameKey = "StartGame"
 
 @Composable
 fun PlayScreen(viewModel: PlayViewModel) {
+
+    val context = LocalContext.current
+
+    var photoTaken by remember { mutableStateOf(false) }
+
+    var photoUri by remember {
+        mutableStateOf<Uri?>(null)
+    }
+
+    val cameraLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { photoTakenSuccess ->
+            photoTaken = photoTakenSuccess
+        }
+
     ConstraintLayout(modifier = Modifier.fillMaxSize()) {
         val (messagesRef, chatBoxRef) = createRefs()
 
@@ -76,7 +94,9 @@ fun PlayScreen(viewModel: PlayViewModel) {
                 viewModel.sendMessage(message)
             },
             onTakePhotoClicked = {
-
+                val uri = SimonsSaysFileProvider.getImageUri(context)
+                photoUri = uri
+                cameraLauncher.launch(uri)
             }
         )
     }

@@ -10,7 +10,8 @@ import javax.inject.Inject
 @HiltViewModel
 class PlayViewModel @Inject constructor(
     private val startSimonSays: StartSimonSays,
-    private val sendMessageToSimon: SendMessageToSimon
+    private val sendMessageToSimon: SendMessageToSimon,
+    private val sendImageToSimon: SendImageToSimon
 ) : ViewModel() {
     val messages: StateFlow<List<Message>>
         get() = _messages
@@ -48,6 +49,10 @@ class PlayViewModel @Inject constructor(
         _messages.update {
             list
         }
+    }
+
+    fun sendImage() {
+
     }
 }
 

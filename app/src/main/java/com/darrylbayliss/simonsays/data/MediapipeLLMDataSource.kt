@@ -1,20 +1,66 @@
 package com.darrylbayliss.simonsays.data
 
+import android.util.Log
 import com.google.mediapipe.tasks.genai.llminference.LlmInference
+import com.google.mediapipe.tasks.vision.imageclassifier.ImageClassifier
+import com.google.mediapipe.framework.image.MPImage
+import com.google.mediapipe.tasks.components.containers.ClassificationResult
 import javax.inject.Inject
 
 
-private const val StartPrompt = """
-    You are Simon in a game of Simon Says. Your goal is to ask the player to perform tasks as if only you and the player are in the game.
-    You can ask the player to perform a variety of tasks, suitable for indoors.
-    You can ask the player to take photos of objects, as a task.
-    It is imperative you do not ask them to do anything that is potentially harmful or unlawful.
-    Begin the game by being friendly. Then ask them a task and await their response.
+private const val SimonSaysPrompt = """
+    You are a Simon in a game of Simon Says. Your objective is to ask the player to perform tasks.
+    
+    For every task you give, you must prefix it with the words "Simon says".
+    
+    You must not ask the player to do anything that is dangerous, unethical or unlawful.
+    
+    Do not try to communicate with the player. Only ask the player to perform tasks.
 """
 
-class MediapipeLLMDataSource @Inject constructor(private val llmInference: LlmInference) {
+private const val MovePrompt = SimonSaysPrompt + """
+    Give the player a task related to moving to a different position.
+"""
 
-    fun start(): String = llmInference.generateResponse(StartPrompt)
+private const val TouchBodyPartPrompt = SimonSaysPrompt + """
+    Give the player a task related to touching a body part.
+"""
 
-    fun sendMessage(message: String): String = llmInference.generateResponse(message)
+private const val SingASongPrompt = SimonSaysPrompt + """
+    Ask the player to sing a song of their choice.
+"""
+
+private const val TakePhotoPrompt = SimonSaysPrompt + """
+    Give the player to take a photo of an object.
+"""
+
+class MediapipeLLMDataSource @Inject constructor(
+    private val llmInference: LlmInference,
+    private val imageClassifier: ImageClassifier
+) {
+
+    private val prompts = listOf(
+        MovePrompt,
+        TouchBodyPartPrompt,
+        SingASongPrompt,
+        TakePhotoPrompt
+    )
+
+    fun start(): String {
+        Log.i(
+            MediapipeLLMDataSource::class.java.simpleName,
+            "Starting Simon says with the following prompt: $SimonSaysPrompt"
+        )
+        return llmInference.generateResponse(SimonSaysPrompt)
+    }
+
+    fun sendMessage(message: String): String {
+        val prompt = prompts.random()
+        Log.i(
+            MediapipeLLMDataSource::class.java.simpleName,
+            "Passing LLM the following prompt: $prompt"
+        )
+        return llmInference.generateResponse(prompts.random())
+    }
+    fun classifyImage(image: MPImage): ClassificationResult = imageClassifier.classify(image).classificationResult()
 }

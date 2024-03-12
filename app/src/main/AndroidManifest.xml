@@ -13,6 +13,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SimonSays"
         tools:targetApi="31">
+        <provider
+            android:name="com.darrylbayliss.simonsays.utils.SimonsSaysFileProvider"
+            android:authorities="com.darrylbayliss.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
