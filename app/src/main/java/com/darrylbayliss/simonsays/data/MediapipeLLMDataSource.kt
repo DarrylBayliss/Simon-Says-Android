@@ -1,7 +1,6 @@
 package com.darrylbayliss.simonsays.data
 
 import android.util.Log
-import com.darrylbayliss.simonsays.domain.Message
 import com.google.mediapipe.tasks.genai.llminference.LlmInference
 import com.google.mediapipe.tasks.vision.imageclassifier.ImageClassifier
 import com.google.mediapipe.framework.image.MPImage
@@ -32,7 +31,11 @@ private const val SingASongPrompt = SimonSaysPrompt + """
 """
 
 private const val TakePhotoPrompt = SimonSaysPrompt + """
-    Give the player to take a photo of an object.
+    Give the player a task to take a photo of an object.
+"""
+
+private const val MakeANoise = SimonSaysPrompt + """
+    Give the player a task to make a loud noise.
 """
 
 class MediapipeLLMDataSource @Inject constructor(
@@ -44,7 +47,8 @@ class MediapipeLLMDataSource @Inject constructor(
         MovePrompt,
         TouchBodyPartPrompt,
         SingASongPrompt,
-        TakePhotoPrompt
+        TakePhotoPrompt,
+        MakeANoise
     )
 
     fun start(): String {
@@ -55,7 +59,7 @@ class MediapipeLLMDataSource @Inject constructor(
         return llmInference.generateResponse(SimonSaysPrompt)
     }
 
-    fun sendMessage(message: Message): String {
+    fun sendMessage(): String {
         val prompt = prompts.random()
         Log.i(
             MediapipeLLMDataSource::class.java.simpleName,
