@@ -14,6 +14,7 @@ tasks-vision = "0.10.2"
 navigationCompose = "2.7.7"
 constraintlayout = "1.0.1"
 hilt = "2.48"
+accompanist-permissions = "0.35.0-alpha"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -38,6 +39,8 @@ androidx-navigation-compose = { group = "androidx.navigation", name = "navigatio
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout-compose", version.ref = "constraintlayout" }
 android-hilt = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 android-hilt-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt" }
+accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanist-permissions" }
+
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

@@ -1,6 +1,7 @@
 package com.darrylbayliss.simonsays.data
 
 import android.util.Log
+import com.darrylbayliss.simonsays.domain.Message
 import com.google.mediapipe.tasks.genai.llminference.LlmInference
 import com.google.mediapipe.tasks.vision.imageclassifier.ImageClassifier
 import com.google.mediapipe.framework.image.MPImage
@@ -54,13 +55,24 @@ class MediapipeLLMDataSource @Inject constructor(
         return llmInference.generateResponse(SimonSaysPrompt)
     }
 
-    fun sendMessage(message: String): String {
+    fun sendMessage(message: Message): String {
         val prompt = prompts.random()
         Log.i(
             MediapipeLLMDataSource::class.java.simpleName,
             "Passing LLM the following prompt: $prompt"
         )
-        return llmInference.generateResponse(prompts.random())
+        return llmInference.generateResponse(prompt)
     }
-    fun classifyImage(image: MPImage): ClassificationResult = imageClassifier.classify(image).classificationResult()
+
+    fun classifyImage(image: MPImage): ClassificationResult =
+        imageClassifier.classify(image).classificationResult()
+
+    fun requestNewTask(): String {
+        val prompt = prompts.random()
+        Log.i(
+            MediapipeLLMDataSource::class.java.simpleName,
+            "Passing LLM the following prompt: $prompt"
+        )
+        return llmInference.generateResponse(prompt)
+    }
 }

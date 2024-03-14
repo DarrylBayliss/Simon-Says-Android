@@ -11,7 +11,7 @@ android {
 
     defaultConfig {
         applicationId = "com.darrylbayliss.simonsays"
-        minSdk = 24
+        minSdk = 28
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -69,13 +69,13 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.fragment)
     implementation(libs.androidx.hilt.navigation.compose)
 
-
-
     // Mediapipe Libraries
     implementation(libs.tasks.genai)
     implementation(libs.tasks.vision)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.constraintlayout)
+
+    implementation(libs.accompanist.permissions)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

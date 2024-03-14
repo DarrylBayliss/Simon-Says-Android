@@ -1,8 +1,11 @@
+@file:OptIn(ExperimentalPermissionsApi::class)
+
 package com.darrylbayliss.simonsays.presentation
 
-import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.launch
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -27,7 +30,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.painter.BitmapPainter
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
@@ -40,25 +45,31 @@ import com.darrylbayliss.simonsays.domain.Message
 import com.darrylbayliss.simonsays.domain.PlayViewModel
 import com.darrylbayliss.simonsays.ui.theme.PurpleGrey80
 import com.darrylbayliss.simonsays.ui.theme.SimonSaysTheme
-import com.darrylbayliss.simonsays.utils.SimonsSaysFileProvider
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.PermissionState
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
+
 
 private const val StartGameKey = "StartGame"
 
 @Composable
 fun PlayScreen(viewModel: PlayViewModel) {
 
-    val context = LocalContext.current
-
-    var photoTaken by remember { mutableStateOf(false) }
-
-    var photoUri by remember {
-        mutableStateOf<Uri?>(null)
-    }
-
     val cameraLauncher =
-        rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { photoTakenSuccess ->
-            photoTaken = photoTakenSuccess
+        rememberLauncherForActivityResult(ActivityResultContracts.TakePicturePreview()) { bitmap ->
+            bitmap?.let {
+                viewModel.sendPhoto(
+                    bitmap.asImageBitmap()
+                )
+            }
         }
+
+    val cameraPermissions = rememberPermissionState(
+        android.Manifest.permission.CAMERA
+    ) {
+        cameraLauncher.launch()
+    }
 
     ConstraintLayout(modifier = Modifier.fillMaxSize()) {
         val (messagesRef, chatBoxRef) = createRefs()
@@ -81,6 +92,9 @@ fun PlayScreen(viewModel: PlayViewModel) {
             }
         }
 
+        val focusManager = LocalFocusManager.current
+        focusManager.clearFocus()
+
         ChatBox(
             modifier = Modifier
                 .fillMaxWidth()
@@ -92,12 +106,13 @@ fun PlayScreen(viewModel: PlayViewModel) {
                 },
             onSendMessageClicked = { message ->
                 viewModel.sendMessage(message)
+                focusManager.clearFocus()
             },
             onTakePhotoClicked = {
-                val uri = SimonsSaysFileProvider.getImageUri(context)
-                photoUri = uri
-                cameraLauncher.launch(uri)
-            }
+                cameraLauncher.launch()
+                focusManager.clearFocus()
+            },
+            cameraPermissions = cameraPermissions,
         )
     }
 
@@ -127,7 +142,11 @@ fun ChatItem(message: Message) {
                 .background(PurpleGrey80)
                 .padding(16.dp)
         ) {
-            Text(text = message.text)
+            if (message.text.isNotEmpty()) {
+                Text(text = message.text)
+            } else if (message.image != null) {
+                Image(painter = BitmapPainter(image = message.image), contentDescription = "")
+            }
         }
     }
 }
@@ -136,7 +155,8 @@ fun ChatItem(message: Message) {
 fun ChatBox(
     modifier: Modifier,
     onSendMessageClicked: (String) -> Unit,
-    onTakePhotoClicked: () -> Unit
+    onTakePhotoClicked: () -> Unit,
+    cameraPermissions: PermissionState
 ) {
 
     var chatBoxValue by remember { mutableStateOf(TextFieldValue("")) }
@@ -160,7 +180,13 @@ fun ChatBox(
         }) {
             Icon(painter = painterResource(id = R.drawable.send), contentDescription = null)
         }
-        IconButton(onClick = { onTakePhotoClicked() }) {
+        IconButton(onClick = {
+            if (cameraPermissions.status.isGranted) {
+                onTakePhotoClicked()
+            } else {
+                cameraPermissions.launchPermissionRequest()
+            }
+        }) {
             Icon(
                 painter = painterResource(id = R.drawable.photo_camera),
                 contentDescription = null

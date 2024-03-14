@@ -33,8 +33,8 @@ class AppModule {
                 BaseOptions.builder().setModelAssetPath("efficientnet_lite2.tflite").build()
             )
             .setRunningMode(RunningMode.IMAGE)
-            .setScoreThreshold(80.0f)
-            .setMaxResults(1)
+            .setScoreThreshold(30.0f)
+            .setMaxResults(10)
             .build()
         return ImageClassifier.createFromOptions(context, options)
     }
