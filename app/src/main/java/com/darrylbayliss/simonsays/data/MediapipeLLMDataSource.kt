@@ -34,7 +34,7 @@ private const val TakePhotoPrompt = SimonSaysPrompt + """
     Give the player a task to take a photo of an object.
 """
 
-private const val MakeANoise = SimonSaysPrompt + """
+private const val MakeANoisePrompt = SimonSaysPrompt + """
     Give the player a task to make a loud noise.
 """
 
@@ -48,7 +48,7 @@ class MediapipeLLMDataSource @Inject constructor(
         TouchBodyPartPrompt,
         SingASongPrompt,
         TakePhotoPrompt,
-        MakeANoise
+        MakeANoisePrompt
     )
 
     fun start(): String {

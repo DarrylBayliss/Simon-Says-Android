@@ -22,8 +22,7 @@ fun InstructionsScreen() {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text("Do what simon tells you within the time limit.")
-            Text("You get one point for each completed task.")
+            Text("Do what simon tells you.")
         }
     }
 }
