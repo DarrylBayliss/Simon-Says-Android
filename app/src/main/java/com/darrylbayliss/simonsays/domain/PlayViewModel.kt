@@ -3,13 +3,20 @@ package com.darrylbayliss.simonsays.domain
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.darrylbayliss.simonsays.data.ImageClassificationState
 import com.google.mediapipe.framework.image.BitmapImageBuilder
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
+
+private val awaitingMessageFromSimon = Message(
+    text = "...",
+    isFromMe = false
+)
 
 @HiltViewModel
 class PlayViewModel @Inject constructor(
@@ -26,33 +33,45 @@ class PlayViewModel @Inject constructor(
     )
 
     fun startGame() {
-        val message = startSimonSays()
-        val list = _messages.value.toMutableList()
-        list += message
+        viewModelScope.launch {
+            _messages.update { messages ->
+                val mutableList = messages.toMutableList()
+                mutableList += awaitingMessageFromSimon
+                mutableList
+            }
 
-        _messages.update {
-            list
+            val message = startSimonSays()
+
+            _messages.update { messages ->
+                val mutableList = messages.toMutableList()
+                mutableList.removeLast()
+                mutableList += message
+                mutableList
+            }
         }
     }
 
     fun sendMessage(text: String) {
-        val newMessage = Message(
-            text = text,
-            isFromMe = true
-        )
+        viewModelScope.launch {
+            val newMessage = Message(
+                text = text,
+                isFromMe = true
+            )
 
-        val list = _messages.value.toMutableList()
-        list += newMessage
+            _messages.update { messages ->
+                val mutableList = messages.toMutableList()
+                mutableList += listOf(newMessage, awaitingMessageFromSimon)
+                mutableList
+            }
 
-        _messages.update {
-            list
-        }
+            val message = sendMessageToSimon(message = newMessage)
 
-        val messageFromSimon = sendMessageToSimon(message = newMessage)
-        list += messageFromSimon
-
-        _messages.update {
-            list
+            _messages.update { messages ->
+                val mutableList = messages.toMutableList()
+                mutableList.removeLast()
+                mutableList += message
+                mutableList
+            }
         }
     }
 

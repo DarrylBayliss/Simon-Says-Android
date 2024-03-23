@@ -5,6 +5,8 @@ import com.google.mediapipe.tasks.genai.llminference.LlmInference
 import com.google.mediapipe.tasks.vision.imageclassifier.ImageClassifier
 import com.google.mediapipe.framework.image.MPImage
 import com.google.mediapipe.tasks.components.containers.ClassificationResult
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 
@@ -51,21 +53,25 @@ class MediapipeLLMDataSource @Inject constructor(
         MakeANoisePrompt
     )
 
-    fun start(): String {
-        Log.i(
-            MediapipeLLMDataSource::class.java.simpleName,
-            "Starting Simon says with the following prompt: $SimonSaysPrompt"
-        )
-        return llmInference.generateResponse(SimonSaysPrompt)
+    suspend fun start(): String {
+        return withContext(Dispatchers.IO) {
+            Log.i(
+                MediapipeLLMDataSource::class.java.simpleName,
+                "Starting Simon says with the following prompt: $SimonSaysPrompt"
+            )
+            llmInference.generateResponse(SimonSaysPrompt)
+        }
     }
 
-    fun sendMessage(): String {
-        val prompt = prompts.random()
-        Log.i(
-            MediapipeLLMDataSource::class.java.simpleName,
-            "Passing LLM the following prompt: $prompt"
-        )
-        return llmInference.generateResponse(prompt)
+    suspend fun sendMessage(): String {
+        return withContext(Dispatchers.IO) {
+            val prompt = prompts.random()
+            Log.i(
+                MediapipeLLMDataSource::class.java.simpleName,
+                "Passing LLM the following prompt: $prompt"
+            )
+            llmInference.generateResponse(prompt)
+        }
     }
 
     fun classifyImage(image: MPImage): ClassificationResult =
