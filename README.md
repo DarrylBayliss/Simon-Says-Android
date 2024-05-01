@@ -22,4 +22,4 @@ Read the accompanying blog post below to learn more about how MediaPipe works wi
 
 # Other Apps
 
-Enjoyed this app? Check out the [iOS](https://github.com/DarrylBayliss/Simon-Says-iOS) version. 📱🤖
+Enjoyed this app? Check out the [iOS](https://github.com/DarrylBayliss/Simon-Says-iOS) version. 📱
