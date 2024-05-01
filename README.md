@@ -6,7 +6,7 @@ An Android App recreating the Simon Says game. Uses MediaPipe to run the Gemma 2
   <img src="/app-demo.gif" width="400" height="800" />
 </p>
 
-Read the accompanying blog post below: 
+Read the accompanying blog post below to learn more about how MediaPipe works with Gemma and how Gemma works on device: 
 
 - [Playing Simon Says with Gemma and MediaPipe](https://www.darrylbayliss.net/playing-simon-says-with-gemma-and-mediapipe/)
 
@@ -22,4 +22,4 @@ Read the accompanying blog post below:
 
 # Other Apps
 
-Enjoyed this app? Check out the [iOS](https://github.com/DarrylBayliss/Simon-Says-iOS) version. 🤖
+Enjoyed this app? Check out the [iOS](https://github.com/DarrylBayliss/Simon-Says-iOS) version. 📱🤖
