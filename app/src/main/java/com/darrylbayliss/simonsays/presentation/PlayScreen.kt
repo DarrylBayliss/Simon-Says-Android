@@ -12,7 +12,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -52,7 +55,6 @@ import com.google.accompanist.permissions.rememberPermissionState
 
 
 private const val StartGameKey = "StartGame"
-
 @Composable
 fun PlayScreen(viewModel: PlayViewModel) {
 
@@ -71,7 +73,13 @@ fun PlayScreen(viewModel: PlayViewModel) {
         cameraLauncher.launch()
     }
 
-    ConstraintLayout(modifier = Modifier.fillMaxSize()) {
+    ConstraintLayout(
+        modifier = Modifier
+            .fillMaxSize()
+            .imePadding()
+            .statusBarsPadding()
+            .navigationBarsPadding()
+    ) {
         val (messagesRef, chatBoxRef) = createRefs()
 
         val messages = viewModel.messages.collectAsState()
@@ -93,11 +101,11 @@ fun PlayScreen(viewModel: PlayViewModel) {
         }
 
         val focusManager = LocalFocusManager.current
-        focusManager.clearFocus()
 
         ChatBox(
             modifier = Modifier
                 .fillMaxWidth()
+                .imePadding()
                 .constrainAs(chatBoxRef) {
                     bottom.linkTo(parent.bottom)
                     start.linkTo(parent.start)
