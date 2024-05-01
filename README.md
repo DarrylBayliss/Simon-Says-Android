@@ -2,7 +2,9 @@
 
 An Android App recreating the Simon Says game. Uses MediaPipe to run the Gemma 2b LLM on device.  📣 🦾
 
-![App Demo](/app-demo.gif)
+<p align="center">
+  <img src="/app-demo.gif" width="400" height="800" />
+</p>
 
 Read the accompanying blog post below: 
 
