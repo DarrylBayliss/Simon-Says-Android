@@ -7,6 +7,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.launch
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -18,6 +20,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -29,6 +32,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,8 +44,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.darrylbayliss.simonsays.R
 import com.darrylbayliss.simonsays.domain.Message
@@ -52,9 +54,11 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
+import kotlinx.coroutines.launch
 
 
 private const val StartGameKey = "StartGame"
+
 @Composable
 fun PlayScreen(viewModel: PlayViewModel) {
 
@@ -73,30 +77,32 @@ fun PlayScreen(viewModel: PlayViewModel) {
         cameraLauncher.launch()
     }
 
-    ConstraintLayout(
+    Column(
         modifier = Modifier
             .fillMaxSize()
             .imePadding()
             .statusBarsPadding()
             .navigationBarsPadding()
     ) {
-        val (messagesRef, chatBoxRef) = createRefs()
+        val messages by viewModel.messages.collectAsState()
 
-        val messages = viewModel.messages.collectAsState()
+        val lazyListState = rememberLazyListState()
+        val coroutineScope = rememberCoroutineScope()
+
+        if (messages.isNotEmpty()) {
+            LaunchedEffect(key1 = messages.size) {
+                lazyListState.animateScrollToItem(index = messages.lastIndex)
+            }
+        }
 
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
-                .constrainAs(messagesRef) {
-                    top.linkTo(parent.top)
-                    bottom.linkTo(chatBoxRef.top)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                    height = Dimension.fillToConstraints
-                }
+                .weight(1.0f),
+            state = lazyListState
         ) {
-            items(items = messages.value) { item ->
-                ChatItem(item)
+            items(items = messages) { item ->
+                ChatItem(message = item)
             }
         }
 
@@ -104,17 +110,15 @@ fun PlayScreen(viewModel: PlayViewModel) {
 
         ChatBox(
             modifier = Modifier
-                .fillMaxWidth()
                 .imePadding()
-                .constrainAs(chatBoxRef) {
-                    bottom.linkTo(parent.bottom)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                    width = Dimension.fillToConstraints
-                },
+                .fillMaxWidth(),
+            onTextFieldClicked = {
+                coroutineScope.launch {
+                    lazyListState.scrollToItem(index = messages.lastIndex)
+                }
+            },
             onSendMessageClicked = { message ->
                 viewModel.sendMessage(message)
-                focusManager.clearFocus()
             },
             onTakePhotoClicked = {
                 cameraLauncher.launch()
@@ -130,7 +134,9 @@ fun PlayScreen(viewModel: PlayViewModel) {
 }
 
 @Composable
-fun ChatItem(message: Message) {
+fun ChatItem(
+    message: Message
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -164,23 +170,32 @@ fun ChatBox(
     modifier: Modifier,
     onSendMessageClicked: (String) -> Unit,
     onTakePhotoClicked: () -> Unit,
+    onTextFieldClicked: () -> Unit,
     cameraPermissions: PermissionState
 ) {
 
     var chatBoxValue by remember { mutableStateOf(TextFieldValue("")) }
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
+
+    if (isPressed) {
+        onTextFieldClicked()
+    }
 
     Row(
         modifier = modifier,
     ) {
         TextField(
-            modifier = Modifier.weight(1f),
+            modifier = Modifier
+                .weight(1f),
             value = chatBoxValue,
             onValueChange = { newText ->
                 chatBoxValue = newText
             },
             placeholder = {
                 Text(text = "Type something")
-            }
+            },
+            interactionSource = interactionSource
         )
         IconButton(onClick = {
             onSendMessageClicked(chatBoxValue.text)

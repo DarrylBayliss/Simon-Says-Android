@@ -72,8 +72,8 @@ dependencies {
     // Mediapipe Libraries
     implementation(libs.tasks.genai)
     implementation(libs.tasks.vision)
+
     implementation(libs.androidx.navigation.compose)
-    implementation(libs.androidx.constraintlayout)
 
     implementation(libs.accompanist.permissions)
 
