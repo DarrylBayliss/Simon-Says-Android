@@ -11,27 +11,27 @@ import javax.inject.Inject
 
 
 private const val SimonSaysPrompt = """
-    You are a Simon in a game of Simon Says.
+    You are Simon in a game of Simon Says.
     
     For every task you give, you must prefix it with the words "Simon says".
     
     You must not ask the player to do anything that is dangerous, unethical or unlawful.
 """
 
-private const val MovePrompt = SimonSaysPrompt + """
-    Ask the player to move to a different position.
+private const val DoTenPushUpsPrompt = SimonSaysPrompt + """
+    Ask the player to do ten pushups.
 """
 
-private const val TouchBodyPartPrompt = SimonSaysPrompt + """
-    Ask the player to touch an unoffensive body part.
+private const val TouchHeadPrompt = SimonSaysPrompt + """
+    Ask the player to touch their head.
 """
 
 private const val SingASongPrompt = SimonSaysPrompt + """
-    Ask the player to sing a song of their choice.
+    Ask the player to sing their favourite song.
 """
 
-private const val TakePhotoPrompt = SimonSaysPrompt + """
-   Ask the player to take a photo of an object.
+private const val TakePhotoOfOrangePrompt = SimonSaysPrompt + """
+   Ask the player to take a photo of an orange.
 """
 
 private const val MakeANoisePrompt = SimonSaysPrompt + """
@@ -44,20 +44,23 @@ class MediapipeLLMDataSource @Inject constructor(
 ) {
 
     private val prompts = listOf(
-        MovePrompt,
-        TouchBodyPartPrompt,
+        DoTenPushUpsPrompt,
+        TouchHeadPrompt,
         SingASongPrompt,
-        TakePhotoPrompt,
+        TakePhotoOfOrangePrompt,
         MakeANoisePrompt
     )
 
     suspend fun start(): String {
         return withContext(Dispatchers.IO) {
+
+            val prompt = prompts.random()
+
             Log.i(
                 MediapipeLLMDataSource::class.java.simpleName,
-                "Starting Simon says with the following prompt: $SimonSaysPrompt"
+                "Starting Simon says with the following prompt: $prompt"
             )
-            llmInference.generateResponse(SimonSaysPrompt)
+            llmInference.generateResponse(prompt)
         }
     }
 
