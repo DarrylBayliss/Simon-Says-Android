@@ -4,3 +4,13 @@ plugins {
     alias(libs.plugins.jetbrainsKotlinAndroid) apply false
     id("com.google.dagger.hilt.android") version "2.48" apply false
 }
+
+buildscript {
+    repositories {
+        google()
+    }
+    dependencies {
+        classpath(libs.androidx.navigation.safe.args.gradle.plugin)
+    }
+}
+

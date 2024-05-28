@@ -11,8 +11,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.darrylbayliss.simonsays.domain.PlayViewModel
+import com.darrylbayliss.simonsays.presentation.Instructions
 import com.darrylbayliss.simonsays.presentation.InstructionsScreen
+import com.darrylbayliss.simonsays.presentation.Play
 import com.darrylbayliss.simonsays.presentation.PlayScreen
+import com.darrylbayliss.simonsays.presentation.Welcome
 import com.darrylbayliss.simonsays.presentation.WelcomeScreen
 import com.darrylbayliss.simonsays.ui.theme.SimonSaysTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -35,18 +38,18 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun SimonSaysApp() {
     val navController = rememberNavController()
-    NavHost(navController, startDestination = "welcome") {
-        composable("welcome") {
+    NavHost(navController, startDestination = Welcome) {
+        composable<Welcome> {
             WelcomeScreen(
                 onNavigateToPlay = {
-                    navController.navigate("play")
+                    navController.navigate(Play)
                 },
                 onNavigateToInstructions = {
-                    navController.navigate("instructions")
+                    navController.navigate(Instructions)
                 })
         }
-        composable("play") { PlayScreen(hiltViewModel<PlayViewModel>()) }
-        composable("instructions") { InstructionsScreen() }
+        composable<Play> { PlayScreen(hiltViewModel<PlayViewModel>()) }
+        composable<Instructions> { InstructionsScreen() }
     }
 }
 
@@ -60,3 +63,4 @@ fun GreetingPreview() {
         )
     }
 }
+
