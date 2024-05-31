@@ -1,6 +1,6 @@
 package com.darrylbayliss.simonsays.data
 
-import com.darrylbayliss.simonsays.domain.Message
+import com.darrylbayliss.simonsays.presentation.Message
 import com.google.mediapipe.framework.image.MPImage
 import javax.inject.Inject
 

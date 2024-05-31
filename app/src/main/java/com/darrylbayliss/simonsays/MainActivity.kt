@@ -10,8 +10,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.darrylbayliss.simonsays.domain.PlayViewModel
 import com.darrylbayliss.simonsays.presentation.Instructions
+import com.darrylbayliss.simonsays.presentation.PlayViewModel
 import com.darrylbayliss.simonsays.presentation.InstructionsScreen
 import com.darrylbayliss.simonsays.presentation.Play
 import com.darrylbayliss.simonsays.presentation.PlayScreen

@@ -1,10 +1,14 @@
-package com.darrylbayliss.simonsays.domain
+package com.darrylbayliss.simonsays.presentation
 
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.darrylbayliss.simonsays.data.ImageClassificationState
+import com.darrylbayliss.simonsays.domain.RequestNewTaskFromSimon
+import com.darrylbayliss.simonsays.domain.SendImageToSimon
+import com.darrylbayliss.simonsays.domain.SendMessageToSimon
+import com.darrylbayliss.simonsays.domain.StartSimonSays
 import com.google.mediapipe.framework.image.BitmapImageBuilder
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
