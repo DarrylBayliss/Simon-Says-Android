@@ -11,6 +11,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.darrylbayliss.simonsays.ui.theme.SimonSaysTheme
+import kotlinx.serialization.Serializable
+
+@Serializable
+object Instructions
 
 @Composable
 fun InstructionsScreen() {

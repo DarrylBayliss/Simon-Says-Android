@@ -53,9 +53,13 @@ import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import kotlinx.coroutines.launch
+import kotlinx.serialization.Serializable
 
 
 private const val StartGameKey = "StartGame"
+
+@Serializable
+object Play
 
 @Composable
 fun PlayScreen(viewModel: PlayViewModel) {
