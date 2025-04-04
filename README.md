@@ -14,7 +14,7 @@ Read the accompanying blog post below to learn about how MediaPipe works and how
 
 1. Clone the repo
 
-2. Go to [Kaggle](https://www.kaggle.com/models/google/gemma), sign up and accept the Gemma T&C's. Download the `gemma-2b-it-cpu` version of the models under the TensorFlow Lite tab.
+2. Go to [Kaggle](https://www.kaggle.com/models/google/gemma), sign up and accept the Gemma T&C's. Download the `gemma3-1b-it-int4.task` version of the model under the TensorFlow Lite tab.
 
 3. Using Device Explorer, import the Gemma model onto your device in the path specified in `AppModule.kt`
 

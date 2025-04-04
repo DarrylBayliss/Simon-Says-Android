@@ -21,7 +21,9 @@ class AppModule {
         return LlmInference.createFromOptions(
             context,
             LlmInference.LlmInferenceOptions.builder()
-                .setModelPath("/data/local/tmp/llm/gemma-2b-it-cpu-int8.bin")
+                .setModelPath("/data/local/tmp/slm/gemma3-1B-it-int4.task")
+                .setPreferredBackend(LlmInference.Backend.CPU) // Change to GPU if you have a GPU powered device.
+                .setMaxTopK(64)
                 .build()
         )
     }
