@@ -1,20 +1,22 @@
 [versions]
-agp = "8.4.0"
+agp = "8.9.1"
 hiltNavigationFragment = "1.2.0"
-kotlin = "1.9.0"
-coreKtx = "1.13.1"
+kotlin = "2.1.10"
+coreKtx = "1.15.0"
 junit = "4.13.2"
-junitVersion = "1.1.5"
-espressoCore = "3.5.1"
-lifecycleRuntimeKtx = "2.7.0"
-activityCompose = "1.9.0"
-composeBom = "2024.05.00"
-tasks-genai = "0.10.14"
+junitVersion = "1.2.1"
+espressoCore = "3.6.1"
+lifecycleRuntimeKtx = "2.8.7"
+activityCompose = "1.10.1"
+composeBom = "2025.03.01"
+tasks-genai = "0.10.22"
 tasks-vision = "0.20230731"
-navigationCompose = "2.8.0-beta01"
-navigationSafeArgsGradlePlugin = "2.8.0-beta01"
-kotlinxSerializationJson = "1.6.3"
-hilt = "2.48"
+navigationCompose = "2.8.9"
+navigationSafeArgsGradlePlugin = "2.8.9"
+kotlinxSerializationJson = "1.8.0"
+serializationPlugin = "2.0.10"
+hilt = "2.54"
+ksp = "2.1.10-1.0.31"
 accompanist-permissions = "0.35.0-alpha"
 
 [libraries]
@@ -40,10 +42,14 @@ androidx-navigation-compose = { group = "androidx.navigation", name = "navigatio
 androidx-navigation-safe-args-gradle-plugin = { module = "androidx.navigation:navigation-safe-args-gradle-plugin", version.ref = "navigationSafeArgsGradlePlugin" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 android-hilt = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
-android-hilt-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt" }
+android-hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt" }
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanist-permissions" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+jetbrains-kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "serializationPlugin" }
 
